@@ -1,0 +1,14 @@
+{
+  "name": "emitter",
+  "version": "1.0.0",
+  "description": "stock price emitter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Patrick Valera",
+  "license": "ISC",
+  "dependencies": {
+    "appwrite": "^7.0.0"
+  }
+}
