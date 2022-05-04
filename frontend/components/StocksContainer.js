@@ -19,16 +19,16 @@ const StocksContainer = () => {
     try {
       await api.database.createDocument('stocks', 'unique()', {
         name: 'sample',
-        tickerSymbol:'EX',
+        tickerSymbol: 'EX',
         currentPrice: 4,
         color: 'red',
         priceHistory: [1, 2, 3, 4, 19, 5]
       })
-    console.log('SUBMITTED')
+      console.log('SUBMITTED')
 
     }
     catch (e) {
-          console.log(e.message)
+      console.log(e.message)
 
     }
 
@@ -47,7 +47,10 @@ const StocksContainer = () => {
       >
         Stocks
       </Typography>
-      {stocks.map((stock) => (<StockPanel key={stock.tickerSymbol} stock={stock} />))}
+      <Box display='flex' sx={{flexWrap:'wrap'}}>
+        {stocks.map((stock) => (<StockPanel key={stock.tickerSymbol} stock={stock} />))}
+
+      </Box>
     </Box>
   )
 }

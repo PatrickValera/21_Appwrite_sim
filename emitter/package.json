@@ -9,6 +9,7 @@
   "author": "Patrick Valera",
   "license": "ISC",
   "dependencies": {
-    "appwrite": "^7.0.0"
+    "appwrite": "^7.0.0",
+    "node-appwrite": "^5.1.0"
   }
 }
