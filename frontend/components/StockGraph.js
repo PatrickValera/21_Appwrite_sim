@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const range = 100
-const data = [
+const dataSample = [
     {
         "name": "Page A",
         "uv": 4000,
@@ -45,16 +45,88 @@ const data = [
         "uv": 3490,
         "pv": 4300,
         "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
+    },
+    {
+        "name": "Page G",
+        "uv": 3490,
+        "pv": 4300,
+        "amt": 2100
     }
 ]
 const mode = 'light'
-const StockGraph = ({color}) => {
+
+const StockGraph = ({ color, width }) => {
+    const [data, setData] = useState(dataSample)
+    useEffect(() => {
+        setInterval(() => {
+            setData((state) => [...state, {
+                "name": "Page A",
+                "uv": 4000,
+                "pv": 2400,
+                "amt": 2400
+            },])
+        }, 1000)
+    }, [])
     return (
         <Box sx={{ width: '100%', height: { xs: '240px', sm: '200px', md: '300px' } }}>
-            <ResponsiveContainer>
+            <ResponsiveContainer width={width}>
                 {color &&
                     <ComposedChart
-                        data={data.slice(-range)}
+                        data={data}
                         margin={{ top: 25, right: 30, left: 20, bottom: 5 }}>
                         <defs>
                             <linearGradient id={color} x1="0" y1="0" x2="0" y2="1">
@@ -76,7 +148,6 @@ const StockGraph = ({color}) => {
                         />
                         <Area isAnimationActive={false} type="monotone" stroke={0} dataKey="uv" strokeWidth={2} fillOpacity={1} fill={`url(#${color})`} />
                     </ComposedChart>}
-
             </ResponsiveContainer>
         </Box>
 
@@ -91,7 +162,7 @@ const CustomToolTip = ({ active, payload, label }) => {
                     <Typography variant='body2' color='success.light' className='no-select'>
                         {/* ${toLocale(payload[0].value)} */}
                         ${payload[0].value}
-                        </Typography>
+                    </Typography>
                 </Box>
             }
         </>
