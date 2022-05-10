@@ -10,7 +10,9 @@ node_modules
 /coverage
 
 # next.js
+frontend
 .next
+.next/
 out
 /.next/
 /out/

@@ -30,7 +30,7 @@ const startEmitter = async (id) => {
 }
 const update = async (id) => {
     let promise = await database.updateDocument('stocks', id, {
-        currentPrice: Math.floor(Math.random() * 100),
+        currentPrice: Math.floor(Math.random() * 10),
     }).then((res) => {
         console.log('updated')
     })

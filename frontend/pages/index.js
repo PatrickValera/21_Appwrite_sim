@@ -2,8 +2,43 @@ import Head from 'next/head'
 import { Container } from '@mui/material'
 import PortfolioPanel from '../components/PanelPortfolio/PortfolioPanel'
 import MarketPanel from '../components/PanelMarket/MarketPanel'
+import ActionPanel from '../components/ActionPanel'
+import { useEffect, useState } from 'react'
+import api from '../api'
+import { Query } from 'appwrite'
 
 export default function Home() {
+  const [open, setOpen] = useState(false)
+  const [focuseStock, setFocuseStock] = useState()
+  const [assets, setAssets] = useState([])
+  const [stocks, setStocks] = useState([])
+
+  const fetchAssets = async () => {
+    const user = await api.account.get()
+    const { documents: dataFromServerAssets } = await api.database.listDocuments('asset', [Query.equal('ownerId', user.$id)])
+    const { documents: dataFromServerStocks } = await api.database.listDocuments('stocks')
+    setAssets(dataFromServerAssets)
+    setStocks(dataFromServerStocks)
+  }
+  const handleChangeFocus = (stock) => {
+    console.log(stock)
+    setOpen(true)
+    setFocuseStock(stock)
+  }
+  useEffect(() => {
+    let interval
+    if (stocks) {
+      interval = setInterval(async () => {
+        const { documents: dataFromServerStocks } = await api.database.listDocuments('stocks')
+        setStocks(dataFromServerStocks)
+
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [])
+  useEffect(() => {
+    fetchAssets()
+  }, [])
 
   return (
     <Container maxWidth='xl'>
@@ -13,9 +48,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
-        <PortfolioPanel/>
-        <MarketPanel/>
-  
+        <PortfolioPanel stocks={stocks} assets={assets} />
+        <MarketPanel stocks={stocks} setFocuseStock={handleChangeFocus} />
+        {focuseStock&&<ActionPanel open={open} setOpen={setOpen} stockId={focuseStock.$id} />}
       </>
     </Container>
   )

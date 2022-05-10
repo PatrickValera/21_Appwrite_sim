@@ -1,9 +1,19 @@
+import { Button } from '@mui/material';
 import React from 'react'
+import api from '../api'
+const Login = () => {
+  const handleLogin = () => {
+    let promise = api.account.createSession('admin@example.com', 'password');
+    promise.then(function (response) {
+      console.log(response); // Success
+    }, function (error) {
+      console.log(error); // Failure
+    });
 
-const login = () => {
+  }
   return (
-    <div>LOGIN</div>
+    <Button onClick={handleLogin}>Login</Button>
   )
 }
 
-export default login
+export default Login
