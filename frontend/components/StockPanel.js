@@ -11,7 +11,7 @@ const StockPanel = ({ stock:stockFromDb }) => {
         //   if (data.event === 'database.documents.create') {
         //     console.log(data.payload)
         //   }
-        console.log('update for ',stock.tickerSymbol)
+        console.log('update for ',stock.ticker)
         console.log(data)
         setStock(state=>({...state,currentPrice:data.payload.currentPrice}))
         })
@@ -21,7 +21,7 @@ const StockPanel = ({ stock:stockFromDb }) => {
       }, [])
     return (
         <Box sx={{flex:'300px 1 1'}}>
-            <Typography variant='h6' color={stock.color}>{stock.tickerSymbol.toUpperCase()}</Typography>
+            <Typography variant='h6' color={stock.color}>{stock.ticker.toUpperCase()}</Typography>
             <Typography variant='body2'>{stock.name}</Typography>
             <Typography variant='body2'>{stock.currentPrice}</Typography>
             <StockGraph color={stock.color} />

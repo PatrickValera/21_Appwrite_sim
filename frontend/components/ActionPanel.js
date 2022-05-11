@@ -22,9 +22,9 @@ const ActionPanel = ({ open, setOpen, stockId }) => {
                 console.log('Creating new asset')
                 api.database.createDocument('asset', 'unique()', {
                     ownerId: user.$id,
-                    stock: activeStock.name,
+                    stockName: activeStock.name,
                     shares: intent,
-                    averagePrice: activeStock.currentPrice,
+                    averageCost: activeStock.currentPrice,
                     stockId: activeStock.$id
                 })
             }
@@ -43,7 +43,7 @@ const ActionPanel = ({ open, setOpen, stockId }) => {
     }
     const fetchStockData=async()=>{
         console.log('fetching',stockId)
-        let promise=api.database.getDocument('stocks',stockId)
+        let promise=api.database.getDocument('stock',stockId)
         promise.then(function(response){
             setActiveStock(response)
         })

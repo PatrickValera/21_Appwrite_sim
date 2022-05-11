@@ -19,7 +19,7 @@ const StocksContainer = ({setFocuseStock, stocks}) => {
     try {
       await api.database.createDocument('stocks', 'unique()', {
         name: 'sample',
-        tickerSymbol: 'EX',
+        ticker: 'EX',
         currentPrice: 4,
         color: 'red',
         priceHistory: [1, 2, 3, 4, 19, 5]
@@ -58,9 +58,9 @@ const StocksContainer = ({setFocuseStock, stocks}) => {
           </TableHead>
           <TableBody >
             {stocks.map((stock) => 
-              <TableRow key={stock.tickerSymbol} hover>
+              <TableRow key={stock.ticker} hover>
                 <TableCell sx={{ border: '1' }}>{stock.name[0].toUpperCase()+stock.name.slice(1)}</TableCell>
-                <TableCell  sx={{ border: '1' }}>{stock.tickerSymbol.toUpperCase()}</TableCell>
+                <TableCell  sx={{ border: '1' }}>{stock.ticker.toUpperCase()}</TableCell>
                 <TableCell align='right' sx={{ border: '1' }}>${stock.currentPrice}</TableCell>
                 <TableCell align='right' sx={{ border: '1' }}>-1.25%</TableCell>
                 <TableCell align='right' sx={{ border: '1' }}>

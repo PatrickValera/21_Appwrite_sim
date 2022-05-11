@@ -106,6 +106,7 @@ const dataSample = [
     "amt": 2100
   }
 ]
+// USER CASH
 const cash = 0
 
 const PortfolioPanel = ({ assets, stocks }) => {
@@ -118,7 +119,7 @@ const PortfolioPanel = ({ assets, stocks }) => {
     if (!stocks) return []
     let newNum = cash
     for (let i = 0; i < assets.length; i++) {
-      let assetPrice = stocks.find(elem => elem.name === assets[i].stock,)
+      let assetPrice = stocks.find(elem => elem.name === assets[i].stockName,)
       // console.log(assetPrice.currentPrice,assets[i].stock)
       newNum += assetPrice.currentPrice * assets[i].shares
     }

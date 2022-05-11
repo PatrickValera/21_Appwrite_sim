@@ -4,6 +4,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material'
 import lightTheme from '../styles/theme/lightTheme'
 import darkTheme from '../styles/theme/darkTheme'
 import { useState } from 'react'
+import Footer from '../components/Footer'
 function MyApp({ Component, pageProps }) {
   const [isLightTheme, setLightTheme] = useState(false)
   return (
@@ -13,6 +14,7 @@ function MyApp({ Component, pageProps }) {
         <CssBaseline />
         <Header />
         <Component {...pageProps} />
+        <Footer/>
       </ThemeProvider>
     </>)
 }

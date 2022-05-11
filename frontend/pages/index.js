@@ -13,15 +13,15 @@ export default function Home() {
   const [assets, setAssets] = useState([])
   const [stocks, setStocks] = useState([])
 
-  const fetchAssets = async () => {
+  const fetchStocksAndAssets = async () => {
     const user = await api.account.get()
     const { documents: dataFromServerAssets } = await api.database.listDocuments('asset', [Query.equal('ownerId', user.$id)])
-    const { documents: dataFromServerStocks } = await api.database.listDocuments('stocks')
+    const { documents: dataFromServerStocks } = await api.database.listDocuments('stock')
     setAssets(dataFromServerAssets)
     setStocks(dataFromServerStocks)
   }
   const handleChangeFocus = (stock) => {
-    console.log(stock)
+    // console.log(stock)
     setOpen(true)
     setFocuseStock(stock)
   }
@@ -29,7 +29,7 @@ export default function Home() {
     let interval
     if (stocks) {
       interval = setInterval(async () => {
-        const { documents: dataFromServerStocks } = await api.database.listDocuments('stocks')
+        const { documents: dataFromServerStocks } = await api.database.listDocuments('stock')
         setStocks(dataFromServerStocks)
 
       }, 1000)
@@ -37,7 +37,7 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
   useEffect(() => {
-    fetchAssets()
+    // fetchStocksAndAssets()
   }, [])
 
   return (
