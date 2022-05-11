@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Container } from '@mui/material'
+import { Container, Paper } from '@mui/material'
 import PortfolioPanel from '../components/PanelPortfolio/PortfolioPanel'
 import MarketPanel from '../components/PanelMarket/MarketPanel'
 import ActionPanel from '../components/ActionPanel'
@@ -48,9 +48,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
-        <PortfolioPanel stocks={stocks} assets={assets} />
-        <MarketPanel stocks={stocks} setFocuseStock={handleChangeFocus} />
-        {focuseStock&&<ActionPanel open={open} setOpen={setOpen} stockId={focuseStock.$id} />}
+        <Paper sx={{p:2, backdropFilter: 'blur(20px)',backgroundColor:'transparent' }}>
+          <PortfolioPanel stocks={stocks} assets={assets} />
+          <MarketPanel stocks={stocks} setFocuseStock={handleChangeFocus} />
+          {focuseStock && <ActionPanel open={open} setOpen={setOpen} stockId={focuseStock.$id} />}
+        </Paper>
       </>
     </Container>
   )

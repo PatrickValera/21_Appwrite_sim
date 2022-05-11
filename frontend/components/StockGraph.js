@@ -4,16 +4,18 @@ import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis }
 
 const range = 100
 
-const mode = 'light'
+const mode = 'dark'
 const StockGraph = ({ color, width, data }) => {
   
     return (
-        <Box sx={{ width: '100%', height: { xs: '240px', sm: '200px', md: '300px' } }}>
-            <ResponsiveContainer width={width}>
+        <Box sx={{ width: '100%',overflow:'clip', height: { xs: '260px', sm: '200px', md: '300px' } }}>
+            <ResponsiveContainer width={width} >
                 {color &&
                     <ComposedChart
                         data={data}
-                        margin={{}}>
+                        margin={{}}
+                        >
+                           
                         <defs>
                             <linearGradient id={color} x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="5%" stopColor={String(color)} stopOpacity={0.5} />

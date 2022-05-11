@@ -4,8 +4,14 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  /* background-image: url('../public/bg5.jpg'); */
+  background-color: #151515;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  position: relative;
 }
-
 a {
   color: inherit;
   text-decoration: none;
@@ -13,4 +19,8 @@ a {
 
 * {
   box-sizing: border-box;
+}
+.blur{
+  backdrop-filter: blur(15px);
+  background-color: transparent;
 }
