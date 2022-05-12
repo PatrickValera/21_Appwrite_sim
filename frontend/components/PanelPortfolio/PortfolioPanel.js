@@ -1,7 +1,9 @@
 import { Box, Divider, Paper, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import StockGraph from '../StockGraph'
+import StockGraph from '../Graph'
 import FlexBox from '../utilcomps/FlexBox'
+import api from '../../api'
+import { Query } from 'appwrite'
 const dataSample = [
   {
     "name": "Page A",
@@ -110,18 +112,21 @@ const dataSample = [
 const cash = 0
 
 const PortfolioPanel = ({ assets, stocks }) => {
+  const [userCash, setUserCash] = useState(0)
   const [balance, setBalance] = useState(0)
   const [width, setWidth] = useState('100%')
   const [data, setData] = useState(dataSample)
   const graph = useRef()
 
-  const calculateBal = () => {
-    if (!stocks) return []
+  // CALCULATE PORTFOLIO VALUE
+  const calculateBal = async () => {
+    if (!stocks.length) return []
     let newNum = cash
-    for (let i = 0; i < assets.length; i++) {
-      let assetPrice = stocks.find(elem => elem.name === assets[i].stockName,)
-      // console.log(assetPrice.currentPrice,assets[i].stock)
-      newNum += assetPrice.currentPrice * assets[i].shares
+    const user = await api.account.get()
+    const { documents } = await api.database.listDocuments('asset', [Query.equal('ownerId', user.$id)])
+    for (let i = 0; i < documents.length; i++) {
+      let assetPrice = stocks.find(elem => elem.name === documents[i].stockName,)
+      newNum += assetPrice.currentPrice * documents[i].shares
     }
     setBalance(newNum)
     setData(state => {
@@ -140,28 +145,32 @@ const PortfolioPanel = ({ assets, stocks }) => {
       return ar
     })
   }
+  // CALL CALC PORTF VALUE EVERTIME STOCKS LISTS CHANGES
   useEffect(() => {
     calculateBal()
   }, [assets, stocks])
+  // LISTEN FOR WINDOW RESIZING
   useEffect(() => {
     window.addEventListener('resize', () => {
       console.log(graph.current.offsetWidth)
       setWidth(graph.current.offsetWidth)
     })
   }, [])
-
+  // useEffect(() => {
+  //   let unsubscribe = api.subscribe()F
+  // }, [])
   return (
     <>
       <Paper elevation={4} sx={{ p: 3, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant='body2'>Current Balance</Typography>
-        <Typography variant='h2'>${balance}</Typography>
+        <Typography variant='body2'>Portfolio Value</Typography>
+        <Typography variant='h2'>${balance.toFixed(2)}</Typography>
         <Box ref={graph}>
           <StockGraph data={data} width={width} color='#14AF7D' />
         </Box>
       </Paper>
       <FlexBox sx={{ px: 1, py: 3 }}>
         <Typography>Buying Power: </Typography>
-        <Typography>$1,500</Typography>
+        <Typography>${userCash}</Typography>
       </FlexBox>
       <Divider sx={{ flex: '100% 1 1' }} />
 

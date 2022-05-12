@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 import FlexBox from './utilcomps/FlexBox'
 import api from '../api'
 import { Query } from "appwrite";
+import StockInfo from './StockInfo';
 
 const ActionPanel = ({ open, setOpen, stockId }) => {
     const [intent, setIntent] = useState(1)
     const [activeStock,setActiveStock] = useState(undefined)
+    // HANDLE BUY AND SELL ACTIONS
     const handleAction = async (action) => {
         // Get Users Id
         const user = await api.account.get()
@@ -17,7 +19,7 @@ const ActionPanel = ({ open, setOpen, stockId }) => {
 
         promise.then(function (response) {
             let exist = response.documents.find(x => x.stockId === activeStock.$id)
-            // CREATE NEW ASSET DOC IF NOT EXIST`   1`-------------------------------------------------------------------+++++++++++++++++++++++++++`-
+            // CREATE NEW ASSET DOC IF NOT EXIST` 
             if (!exist) {
                 console.log('Creating new asset')
                 api.database.createDocument('asset', 'unique()', {
@@ -28,35 +30,39 @@ const ActionPanel = ({ open, setOpen, stockId }) => {
                     stockId: activeStock.$id
                 })
             }
-            // UPDATE IF ASSET EXIST
+            // UPDATE ASSET DOC IF ASSET EXIST
             else {
                 console.log('Updating asset')
                 let newShares
+                let newAvgCost=exist.averageCost
                 if (action === 'sell') newShares = exist.shares - intent
-                else newShares = exist.shares + intent
+                else {
+                    newShares = exist.shares + intent
+                    newAvgCost=(exist.shares*exist.averageCost+intent*activeStock.currentPrice)/(intent+exist.shares)
+
+                }
                 if (newShares<=0)api.database.deleteDocument('asset', exist.$id)
-                else api.database.updateDocument('asset', exist.$id, { shares: newShares })
+                else api.database.updateDocument('asset', exist.$id, { shares: newShares,averageCost:newAvgCost })
             }
         }, function (error) {
             console.log(error)
         });
     }
+    // FETCH STOCK DATA USING ID THEN SET ACTIVE STOCK TO RES
     const fetchStockData=async()=>{
-        console.log('fetching',stockId)
         let promise=api.database.getDocument('stock',stockId)
         promise.then(function(response){
             setActiveStock(response)
         })
     }
     useEffect(()=>{
-        console.log(stockId)
         fetchStockData()
     },[stockId])
     return (
-        <Backdrop open={open} onClick={() => setOpen(false)}>
-            {activeStock && <Paper sx={{ p: 2, pointerEvents: 'all', minWidth: '300px' }} onClick={(e) => e.stopPropagation()}>
-                <Typography variant='body2'>{activeStock.name}</Typography>
-                <Typography variant='body2'>{activeStock.currentPrice}</Typography>
+        <Backdrop open={open} onClick={() => setOpen(false)} sx={{ position:'fixed',width:'100vw',height:'100vh',top:0,left:0}}>
+            {activeStock && 
+            <Paper sx={{ p: 4, pointerEvents: 'all', width: '50vw',minWidth:'300px',maxWidth:'600px' }} onClick={(e) => e.stopPropagation()}>
+                <StockInfo stockId={stockId}/>
                 <Typography variant='body2'>Intent: {intent}</Typography>
                 <Slider aria-label="Volume" value={intent} min={1} max={10} onChange={(e) => setIntent(e.target.value)} />
                 <FlexBox>

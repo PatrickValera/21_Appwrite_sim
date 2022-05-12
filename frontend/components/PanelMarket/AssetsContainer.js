@@ -9,17 +9,22 @@ const AssetsContainer = () => {
 
   const fetchData = async () => {
     console.log('fetching Assets')
-    const user=await api.account.get()
-    const { documents } = await api.database.listDocuments('asset',[Query.equal('ownerId',user.$id)])
-    console.log(documents)
-    setAssetList(documents)
+    try{
+      const user=await api.account.get()
+      const { documents } = await api.database.listDocuments('asset',[Query.equal('ownerId',user.$id)])
+      console.log(documents)
+      setAssetList(documents)
+    }catch(e){
+      console.log(e.message)
+    }
+  
   }
   useEffect(() => {
     if(!assetList)fetchData()
   }, [])
   return (
     <Box>
-      <Typography variant='h6'>
+      <Typography variant='h4' textAlign='center'>
         Your Assets
       </Typography>
       <TableContainer sx={{ width: '100%' }}>

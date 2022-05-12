@@ -61,8 +61,8 @@ const StocksContainer = ({setFocuseStock, stocks}) => {
               <TableRow key={stock.ticker} hover>
                 <TableCell sx={{ border: '1' }}>{stock.name[0].toUpperCase()+stock.name.slice(1)}</TableCell>
                 <TableCell  sx={{ border: '1' }}>{stock.ticker.toUpperCase()}</TableCell>
-                <TableCell align='right' sx={{ border: '1' }}>${stock.currentPrice}</TableCell>
-                <TableCell align='right' sx={{ border: '1' }}>-1.25%</TableCell>
+                <TableCell align='right' sx={{ border: '1' }}>${stock.currentPrice.toFixed(2)}</TableCell>
+                <TableCell align='right' sx={{ border: '1' }}>{((stock.priceHistory.slice(-1)[0]-stock.priceHistory[0])*100/stock.priceHistory.slice(-1)[0]).toFixed(2)}</TableCell>
                 <TableCell align='right' sx={{ border: '1' }}>
                   <Button onClick={()=>setFocuseStock(stock)}>Buy</Button>
                   </TableCell>
