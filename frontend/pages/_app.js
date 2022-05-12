@@ -7,12 +7,13 @@ import { useState } from 'react'
 import Footer from '../components/Footer'
 function MyApp({ Component, pageProps }) {
   const [isLightTheme, setLightTheme] = useState(false)
+  
   return (
     <>
 
       <ThemeProvider theme={isLightTheme ? lightTheme : darkTheme}>
         <CssBaseline />
-        <Header />
+        <Header/>
         <Component {...pageProps} />
         <Footer/>
       </ThemeProvider>

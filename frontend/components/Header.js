@@ -19,16 +19,18 @@ const Header = () => {
       console.log(e)
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     fetchUser()
-  },[])
+  }, [])
   return (
     <FlexBox sx={{ p: 1, width: '100%', bgcolor: 'background.paper', mb: 4, p: 2 }}>
-      <Typography variant='h5'>Mock Stock Platform</Typography>
+      <Link href='/'>
+        <Typography variant='h5' sx={{cursor:'pointer'}}>Mock Stock Platform</Typography>
+      </Link>
       <FlexBox sx={{ justifyContent: 'right', flexGrow: '1' }}>
-        {user? 
-        <Button variant='contained' >{user.email}</Button>:
-        <Link href='/userLogin' variant='contained'>Login</Link>
+        {user ?
+          <Button variant='contained' >{user.email}</Button> :
+          <Link href='/userLogin' variant='contained'>Login</Link>
         }
 
       </FlexBox>

@@ -1,8 +1,9 @@
-import { Typography, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material'
+import { Typography, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Skeleton } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import api from '../../api'
+import StockRow from './StockRow'
 
-const StocksContainer = ({setFocuseStock, stocks}) => {
+const StocksContainer = ({ setFocuseStock, stocks }) => {
   // const [stocks, setStocks] = useState([])
 
   // const fetchData = async () => {
@@ -53,22 +54,22 @@ const StocksContainer = ({setFocuseStock, stocks}) => {
               <TableCell sx={{ width: '10%' }}>Ticker</TableCell>
               <TableCell align='right' sx={{}}>Price</TableCell>
               <TableCell align='right' sx={{}}>Trend 1hr</TableCell>
-              <TableCell align='right' sx={{}}>Actions</TableCell>
+              <TableCell align='right' sx={{}}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody >
-            {stocks.map((stock) => 
-              <TableRow key={stock.ticker} hover>
-                <TableCell sx={{ border: '1' }}>{stock.name[0].toUpperCase()+stock.name.slice(1)}</TableCell>
-                <TableCell  sx={{ border: '1' }}>{stock.ticker.toUpperCase()}</TableCell>
-                <TableCell align='right' sx={{ border: '1' }}>${stock.currentPrice.toFixed(2)}</TableCell>
-                <TableCell align='right' sx={{ border: '1' }}>{((stock.priceHistory.slice(-1)[0]-stock.priceHistory[0])*100/stock.priceHistory.slice(-1)[0]).toFixed(2)}</TableCell>
-                <TableCell align='right' sx={{ border: '1' }}>
-                  <Button onClick={()=>setFocuseStock(stock)}>Buy</Button>
-                  </TableCell>
-              </TableRow>
+            {stocks.map((stock) =>
+              <StockRow key={stock.ticker} stock={stock} setFocuseStock={setFocuseStock}/>
             )}
+            {!stocks.length && [1, 2, 3, 4, 5].map(index => (
+              <TableRow key={index} hover>
+                <TableCell colSpan={5} sx={{ border: '1' }}> <Skeleton variant="rectangular" sx={{ width: '100%' }} height={40} /></TableCell>
+              </TableRow>
+            ))}
+
+
           </TableBody>
+
         </Table>
       </TableContainer>
     </Box>

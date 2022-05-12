@@ -13,16 +13,15 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      let promise = await api.account.createSession(email, password);
-      promise.then(function (response) {
+      await api.account.createSession(email, password).then((response) => {
         console.log(response); // Success
         router.push('/')
       }, function (e) {
         console.log(e); // Failure
       });
     } catch (e) {
-        console.log(e); // Failure
-        setError(e.message)
+      console.log(e); // Failure
+      setError(e.message)
     }
 
   }
