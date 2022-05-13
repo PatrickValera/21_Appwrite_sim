@@ -4,36 +4,8 @@ import StockGraph from './Graph'
 import api from '../api'
 import FlexBox from './utilcomps/FlexBox'
 
-const StockPanel = ({ stockId }) => {
-  const [stock, setStock] = useState(0)
-  const [priceHistory, setPriceHistory] = useState([])
-  useEffect(() => {
-    api.database.getDocument('stock', stockId).then(res =>{ 
-      setStock(res)
-      let ar = res.priceHistory.map(x => ({
-        "name": "Page A",
-        "uv": x,
-        "pv": x,
-        "amt": x
-      }))
-      setPriceHistory(ar)
-    })
-    const unsubscribe = api.subscribe(`collections.stock.documents.${stockId}`, (data) => {
-      let ar = data.payload.priceHistory.map(x => ({
-        "name": "Page A",
-        "uv": x,
-        "pv": x,
-        "amt": x
-      }))
-      setPriceHistory(ar)
-      setStock(state => (data.payload))
-    })
-    return (() => {
-      setPriceHistory([])
-      setStock(0)
-      unsubscribe()
-    })
-  }, [stockId])
+const StockPanel = ({ stock,priceHistory }) => {
+ 
   return (
     <>
       {stock && 

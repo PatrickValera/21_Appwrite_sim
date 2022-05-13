@@ -1,3 +1,4 @@
+import { jsx } from '@emotion/react';
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -8,13 +9,14 @@ const mode = 'dark'
 const StockGraph = ({ color, width, data }) => {
     return (
         <>
-            <Box sx={{width: '100%', overflow: 'clip', height: { xs: '260px', sm: '200px', md: '300px' } }}>
+            <Box sx={{ width: '100%', overflow: 'clip', height: { xs: '200px', sm: '180px', md: '250px' } }}>
                 <ResponsiveContainer width={width}>
                     {color &&
                         <ComposedChart
                             data={data}
                             margin={{}}
                         >
+                            <YAxis domain={[0, 'dataMax+1']} orientation='right' dataKey='formated' />
 
                             <defs>
                                 <linearGradient id={color} x1="0" y1="0" x2="0" y2="1">
@@ -42,6 +44,9 @@ const StockGraph = ({ color, width, data }) => {
     )
 }
 const CustomToolTip = ({ active, payload, label }) => {
+    useEffect(() => {
+        console.log(payload)
+    }, [])
     return (
         <>
             {payload && payload.length &&
@@ -49,7 +54,7 @@ const CustomToolTip = ({ active, payload, label }) => {
                     {/* <Typography variant='body2'>{label}</Typography> */}
                     <Typography variant='body2' color='success.light' className='no-select'>
                         {/* ${toLocale(payload[0].value)} */}
-                        ${payload[0].value.toFixed(2)}
+                        ${payload[0].value}
                     </Typography>
                 </Box>
             }

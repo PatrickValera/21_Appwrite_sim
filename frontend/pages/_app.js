@@ -1,4 +1,3 @@
-import Header from '../components/Header'
 import '../styles/globals.css'
 import { ThemeProvider, CssBaseline } from '@mui/material'
 import lightTheme from '../styles/theme/lightTheme'
@@ -13,7 +12,6 @@ function MyApp({ Component, pageProps }) {
 
       <ThemeProvider theme={isLightTheme ? lightTheme : darkTheme}>
         <CssBaseline />
-        <Header/>
         <Component {...pageProps} />
         <Footer/>
       </ThemeProvider>

@@ -3,13 +3,18 @@ import React, { useEffect, useState } from 'react'
 import FlexBox from './utilcomps/FlexBox'
 import api from '../api'
 import Link from 'next/link'
-
+import { useRouter } from 'next/router'
+import { RiStockLine } from 'react-icons/ri'
 const Header = () => {
   const [user, setUser] = useState()
+  const router = useRouter()
 
-  const handleLogout = async () => {
-    api.account.deleteSession('current')
+  const handleLogout = () => {
+    api.account.deleteSession('current');
+    setUser()
+    router.push('/userLogin')
   }
+
 
   const fetchUser = async () => {
     try {
@@ -21,16 +26,19 @@ const Header = () => {
   }
   useEffect(() => {
     fetchUser()
-  }, [])
+  }, [api])
   return (
     <FlexBox sx={{ p: 1, width: '100%', bgcolor: 'background.paper', mb: 4, p: 2 }}>
       <Link href='/'>
-        <Typography variant='h5' sx={{cursor:'pointer'}}>Mock Stock Platform</Typography>
+        <>
+          
+          <Typography variant='h5' sx={{ cursor: 'pointer',display:'flex',alignItems:'center' }}><RiStockLine size='2.2rem' style={{color:'green'}} />Mock Trade</Typography></>
       </Link>
       <FlexBox sx={{ justifyContent: 'right', flexGrow: '1' }}>
+        <Button href='/leaderboard'>LeaderBoard</Button>
         {user ?
-          <Button variant='contained' >{user.email}</Button> :
-          <Link href='/userLogin' variant='contained'>Login</Link>
+          <Button onClick={handleLogout}>{user.email}</Button> :
+          <Button href='/userLogin' variant='contained'>Login</Button>
         }
 
       </FlexBox>

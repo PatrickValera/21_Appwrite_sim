@@ -4,43 +4,8 @@ import api from '../../api'
 import StockRow from './StockRow'
 
 const StocksContainer = ({ setFocuseStock, stocks }) => {
-  // const [stocks, setStocks] = useState([])
+  
 
-  // const fetchData = async () => {
-  //   console.log('fetching')
-  //   const { documents } = await api.database.listDocuments('stocks')
-  //   console.log(documents)
-  //   setStocks(documents)
-  // }
-
-  // useEffect(() => {
-  //   fetchData()
-  // }, [])
-  const handleSubmit = async () => {
-    try {
-      await api.database.createDocument('stocks', 'unique()', {
-        name: 'sample',
-        ticker: 'EX',
-        currentPrice: 4,
-        color: 'red',
-        priceHistory: [1, 2, 3, 4, 19, 5]
-      })
-      console.log('SUBMITTED')
-
-    }
-    catch (e) {
-      console.log(e.message)
-
-    }
-
-  }
-  // const login = async () => {
-  //   const session = api.account.get()
-  //   if (!session.name) {
-  //     await api.account.createAnonymousSession()
-  //     await api.account.updateName('anon')
-  //   }
-  // }
   return (
     <Box>
       <Typography variant='h4' textAlign='center'>
@@ -59,7 +24,7 @@ const StocksContainer = ({ setFocuseStock, stocks }) => {
           </TableHead>
           <TableBody >
             {stocks.map((stock) =>
-              <StockRow key={stock.ticker} stock={stock} setFocuseStock={setFocuseStock}/>
+              <StockRow key={stock.ticker} stockId={stock.$id} setFocuseStock={setFocuseStock}/>
             )}
             {!stocks.length && [1, 2, 3, 4, 5].map(index => (
               <TableRow key={index} hover>

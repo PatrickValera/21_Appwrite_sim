@@ -1,75 +1,144 @@
-import { Backdrop, Button, Paper, Slider, Typography } from '@mui/material'
+import { Backdrop, Box, Button, Paper, Slider, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import FlexBox from './utilcomps/FlexBox'
 import api from '../api'
 import { Query } from "appwrite";
 import StockInfo from './StockInfo';
 
-const ActionPanel = ({ open, setOpen, stockId }) => {
+const ActionPanel = ({ open, setOpen, stockId, userInfo }) => {
     const [intent, setIntent] = useState(1)
-    const [activeStock,setActiveStock] = useState(undefined)
+    const [stock, setStock] = useState(0)
+    const [priceHistory, setPriceHistory] = useState([])
+    const [error, setError] = useState("")
     // HANDLE BUY AND SELL ACTIONS
     const handleAction = async (action) => {
         // Get Users Id
         const user = await api.account.get()
+        let UserCash
+        await api.database.getDocument('userInfo', userInfo.$id).then(res => UserCash = res.cash)
         // Fetch all assets of User
-        let promise = api.database.listDocuments('asset', [
+        await api.database.listDocuments('asset', [
             Query.equal('ownerId', user.$id),
-        ]);
+        ])
+            // AFTER FETCHING ASSET, UPDATE/CREATE
+            .then((response) => {
+                try {
+                    let exist = response.documents.find(x => x.stockId === stock.$id)
+                    let value = intent * stock.currentPrice
+                    console.log('value:', value)
+                    // CREATE NEW ASSET DOC IF NOT EXIST=======================
+                    if (!exist && action === 'buy') {
+                        // console.log('Creating new asset')
+                        // console.log('user cash:', UserCash)
+                        if (value > UserCash) console.log('Not Enough cash')
+                        else {
+                            api.database.createDocument('asset', 'unique()', {
+                                ownerId: user.$id,
+                                stockName: stock.name,
+                                shares: intent,
+                                averageCost: stock.currentPrice,
+                                stockId: stock.$id
+                            })
+                            let newCash = UserCash - value
+                            api.database.updateDocument('userInfo', userInfo.$id, { cash: newCash })
+                        }
+                    }
+                    // UPDATE ASSET DOC IF ASSET EXIST=========================
+                    else {
+                        // console.log('Updating asset')
+                        let newShares = exist.shares
+                        let newAvgCost = exist.averageCost
+                        // IF ACTION IS TO SELL, SUBTRACT INTENT OT OWNED AND ADD CASH
+                        if (action === 'sell') {
+                            // console.log("SELLING")
+                            newShares = exist.shares - intent
+                            if (intent > exist.shares) newShares = intent
+                            let newCash = UserCash + value
+                            api.database.updateDocument('userInfo', userInfo.$id, { cash: newCash })
 
-        promise.then(function (response) {
-            let exist = response.documents.find(x => x.stockId === activeStock.$id)
-            // CREATE NEW ASSET DOC IF NOT EXIST` 
-            if (!exist) {
-                console.log('Creating new asset')
-                api.database.createDocument('asset', 'unique()', {
-                    ownerId: user.$id,
-                    stockName: activeStock.name,
-                    shares: intent,
-                    averageCost: activeStock.currentPrice,
-                    stockId: activeStock.$id
-                })
-            }
-            // UPDATE ASSET DOC IF ASSET EXIST
-            else {
-                console.log('Updating asset')
-                let newShares
-                let newAvgCost=exist.averageCost
-                if (action === 'sell') newShares = exist.shares - intent
-                else {
-                    newShares = exist.shares + intent
-                    newAvgCost=(exist.shares*exist.averageCost+intent*activeStock.currentPrice)/(intent+exist.shares)
-
+                        }
+                        // IF ACTION IS TO BUY AND ASSET EXIST, ADD TO OWNED AND SUBTRACT CASH
+                        else {
+                            if (value > UserCash) console.log('Not Enough cash')
+                            else {
+                                // console.log("BUYING")
+                                newShares = exist.shares + intent
+                                newAvgCost = (exist.shares * exist.averageCost + intent * stock.currentPrice) / (intent + exist.shares)
+                                let newCash = UserCash - value
+                                api.database.updateDocument('userInfo', userInfo.$id, { cash: newCash })
+                            }
+                        }
+                        // DELETE DOCUMENT IF SOLD ALL
+                        if (newShares <= 0) api.database.deleteDocument('asset', exist.$id)
+                        else api.database.updateDocument('asset', exist.$id, { shares: newShares, averageCost: newAvgCost })
+                    }
+                } catch (error) { 
+                    setError(error.message)
                 }
-                if (newShares<=0)api.database.deleteDocument('asset', exist.$id)
-                else api.database.updateDocument('asset', exist.$id, { shares: newShares,averageCost:newAvgCost })
-            }
-        }, function (error) {
-            console.log(error)
-        });
+
+            }, (error) => {
+                console.log(error)
+            });
     }
     // FETCH STOCK DATA USING ID THEN SET ACTIVE STOCK TO RES
-    const fetchStockData=async()=>{
-        let promise=api.database.getDocument('stock',stockId)
-        promise.then(function(response){
-            setActiveStock(response)
+    const fetchStockData = async () => {
+        let promise = api.database.getDocument('stock', stockId)
+        promise.then(function (response) {
+            setStock(response)
         })
     }
-    useEffect(()=>{
+    // FETCH STOCKDATA ON LOAD/OPEN PANEL
+    useEffect(() => {
         fetchStockData()
-    },[stockId])
+    }, [stockId])
+    // SUBSCRIBE TO STOCK DOC USING ID
+    useEffect(() => {
+        api.database.getDocument('stock', stockId).then(res => {
+            setStock(res)
+            let ar = res.priceHistory.map(x => ({
+                "name": "Page A",
+                "uv": x,
+                "formated": Number(x.toFixed(0)),
+            }))
+            setPriceHistory(ar)
+        })
+        const unsubscribe = api.subscribe(`collections.stock.documents.${stockId}`, (data) => {
+            let ar = data.payload.priceHistory.map(x => ({
+                "name": "Page A",
+                "uv": x,
+                "formated": Number(x.toFixed(0)),
+            }))
+            setPriceHistory(ar)
+            setStock(state => (data.payload))
+        })
+        return (() => {
+            setPriceHistory([])
+            setStock(0)
+            unsubscribe()
+        })
+    }, [stockId])
+
+
     return (
-        <Backdrop open={open} onClick={() => setOpen(false)} sx={{ position:'fixed',width:'100vw',height:'100vh',top:0,left:0}}>
-            {activeStock && 
-            <Paper sx={{ p: 4, pointerEvents: 'all', width: '50vw',minWidth:'300px',maxWidth:'600px' }} onClick={(e) => e.stopPropagation()}>
-                <StockInfo stockId={stockId}/>
-                <Typography variant='body2'>Intent: {intent}</Typography>
-                <Slider aria-label="Volume" value={intent} min={1} max={10} onChange={(e) => setIntent(e.target.value)} />
-                <FlexBox>
-                    <Button onClick={()=>handleAction('sell')}>SELL</Button>
-                    <Button onClick={()=>handleAction('buy')}>BUY</Button>
-                </FlexBox>
-            </Paper>}
+        <Backdrop open={open} onClick={() => setOpen(false)} sx={{ display: `${open ? 'fixed' : 'none'}`, position: 'fixed', width: '100vw', height: '100vh', top: 0, left: 0 }}>
+            {stock &&
+                <Paper sx={{ flexWrap: 'wrap', display: 'flex', p: { xs: 2, sm: 2, md: 4 }, pointerEvents: 'all', width: '60vw', minWidth: '350px', maxWidth: '800px' }} onClick={(e) => e.stopPropagation()}>
+                    <Box sx={{ flex: '320px 1 0' }}>
+                        <StockInfo stock={stock} priceHistory={priceHistory} />
+
+                    </Box>
+                    <Box sx={{ flex: '180px 0 0', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                        <Typography variant='body2' color='error.main'>{error&&error} </Typography>
+                        <Typography variant='h6'>Intent: </Typography>
+                        <TextField type='number' value={intent} onChange={(e) => setIntent(e.target.value)} />
+                        <Slider aria-label="Volume" value={intent} min={1} max={10} onChange={(e) => setIntent(e.target.value)} />
+                        <FlexBox>
+                            <Button variant='outlined' color='error' onClick={() => handleAction('sell')}>SELL</Button>
+                            <Button variant='outlined' color='success' onClick={() => handleAction('buy')}>BUY</Button>
+                        </FlexBox>
+                    </Box>
+
+                </Paper>}
         </Backdrop>
     )
 }
