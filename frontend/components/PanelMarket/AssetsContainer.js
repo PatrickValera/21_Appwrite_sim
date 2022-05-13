@@ -24,9 +24,7 @@ const AssetsContainer = () => {
   }, [])
   return (
     <Box>
-      <Typography variant='h4' textAlign='center'>
-        Your Assets
-      </Typography>
+
       <TableContainer sx={{ width: '100%' }}>
         <Table sx={{}}>
           <TableHead>

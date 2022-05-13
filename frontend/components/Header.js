@@ -12,7 +12,7 @@ const Header = () => {
   const handleLogout = () => {
     api.account.deleteSession('current');
     setUser()
-    router.push('/UserLogin')
+    router.push('/userlogin')
   }
 
 
@@ -28,15 +28,17 @@ const Header = () => {
     fetchUser()
   }, [api])
   return (
-    <FlexBox sx={{ p: 1, width: '100%', bgcolor: 'background.paper', mb: 4, p: 2 }}>
-      <Link href='/'>
+    <FlexBox sx={{ p: {xs:1,md:2}, width: '100%', bgcolor: 'background.paper', mb: {xs:1,md:4},  }}>
+      <FlexBox sx={{ justifyContent: 'left', flexGrow: '1' }}>
+        <Link href='/'>
           <Typography variant='h5' sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}><RiStockLine size='2.2rem' style={{ color: 'green' }} />Mock Trade</Typography>
-      </Link>
-      <FlexBox sx={{ justifyContent: 'right', flexGrow: '1' }}>
-        <Button href='/LeaderBoard'>LeaderBoard</Button>
+        </Link>
+      </FlexBox>
+      <FlexBox sx={{ justifyContent: 'center' }}>
+        <Button href='/leaderboard'>LeaderBoard</Button>
         {user ?
-          <Button onClick={handleLogout}>{user.email}</Button> :
-          <Button href='/UserLogin' variant='contained'>Login</Button>
+          <Button onClick={handleLogout}>Logout</Button> :
+          <Button href='/userlogin' variant='contained'>Login</Button>
         }
 
       </FlexBox>

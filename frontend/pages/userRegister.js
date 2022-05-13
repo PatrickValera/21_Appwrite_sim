@@ -56,7 +56,7 @@ const UserRegister = () => {
         <TextField fullWidth name='email' label='Email' value={email} onChange={(e) => setEmail(e.target.value)} sx={{ mb: 2 }}></TextField>
         <TextField type='password' fullWidth name='password' label='Password' value={password} onChange={(e) => setPassword(e.target.value)} sx={{ mb: 2 }}></TextField>
         <Button type='submit' fullWidth variant='contained' sx={{ mb: 2 }}>Register</Button>
-        <Button type='submit' fullWidth variant='outlined' href='/userLogin' > Have an Account? Login</Button>
+        <Button type='submit' fullWidth variant='outlined' href='/userlogin' > Have an Account? Login</Button>
       </Box>}
     </Container>
   )

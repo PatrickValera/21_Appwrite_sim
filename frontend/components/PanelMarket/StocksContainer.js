@@ -8,9 +8,7 @@ const StocksContainer = ({ setFocuseStock, stocks }) => {
 
   return (
     <Box>
-      <Typography variant='h4' textAlign='center'>
-        Market
-      </Typography>
+ 
       <TableContainer sx={{ width: '100%' }}>
         <Table sx={{}}>
           <TableHead>
