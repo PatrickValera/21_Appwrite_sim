@@ -13,12 +13,18 @@ const database = new sdk.Database(client)
 //     console.log(res)
 // })
 const startEmitters = async () => {
-    // Fetch All Stocks
-    const { documents } = await database.listDocuments('stock').then(res => { return res })
-    // Start Emitter fore each stock, updating prices
-    for (let i = 0; i < documents.length; i++) {
-        startEmitter(documents[i])
+    try {
+        // Fetch All Stocks
+        const { documents } = await database.listDocuments('stock').then(res => { return res })
+        // Start Emitter fore each stock, updating prices
+        for (let i = 0; i < documents.length; i++) {
+            startEmitter(documents[i])
+        }
+    } catch (er) {
+        console.log('ERROR - RESTARTING')
+        startEmitters()
     }
+
 }
 
 const startEmitter = async (stock) => {
