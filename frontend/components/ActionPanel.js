@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Paper, Slider, TextField, Typography } from '@mui/material'
+import { Backdrop, Box, Button, Divider, Paper, Slider, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import FlexBox from './utilcomps/FlexBox'
 import api from '../api'
@@ -72,7 +72,7 @@ const ActionPanel = ({ open, setOpen, stockId, userInfo }) => {
                         if (newShares <= 0) api.database.deleteDocument('asset', exist.$id)
                         else api.database.updateDocument('asset', exist.$id, { shares: newShares, averageCost: newAvgCost })
                     }
-                } catch (error) { 
+                } catch (error) {
                     setError(error.message)
                 }
 
@@ -128,14 +128,25 @@ const ActionPanel = ({ open, setOpen, stockId, userInfo }) => {
 
                     </Box>
                     <Box sx={{ flex: '180px 0 0', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                        <Typography variant='body2' color='error.main'>{error&&error} </Typography>
-                        <Typography variant='h6'>Intent: </Typography>
-                        <TextField type='number' value={intent} onChange={(e) => setIntent(e.target.value)} />
+                        <Typography variant='body2' color='error.main'>{error && error} </Typography>
+                        <FlexBox sx={{ flexWrap: 'noWrap', alignItems: 'center' }}>
+                            <Typography variant='body2'>Intent: </Typography>
+                            <TextField sx={{ display: 'flex',p:0,textAlign:'center' }} type='number' value={intent} onChange={(e) => setIntent(e.target.value)} />
+                        </FlexBox>
                         <Slider aria-label="Volume" value={intent} min={1} max={10} onChange={(e) => setIntent(e.target.value)} />
-                        <FlexBox>
+                        <FlexBox sx={{ mb: 1,justifyContent:'center',my:1 }}>
                             <Button variant='outlined' color='error' onClick={() => handleAction('sell')}>SELL</Button>
                             <Button variant='outlined' color='success' onClick={() => handleAction('buy')}>BUY</Button>
                         </FlexBox>
+                        <FlexBox>
+                            <Typography variant='body2' sx={{flexGrow:'1'}}>Current Price: </Typography>
+                            <Typography variant='body2'>${(stock.currentPrice).toFixed(2)} </Typography>
+                        </FlexBox>
+                        <FlexBox>
+                            <Typography variant='body2' sx={{flexGrow:'1'}}>Total Cost: $ </Typography>
+                            <Typography variant='body2'>${(intent * stock.currentPrice).toFixed(2)} </Typography>
+                        </FlexBox>
+                  
                     </Box>
 
                 </Paper>}

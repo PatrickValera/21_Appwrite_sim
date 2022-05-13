@@ -21,7 +21,7 @@ const LeaderBoard = () => {
     <>
     <Header/>
     <Container maxWidth='md' sx={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography variant='h4' gutterBottom>Top 10 Richest</Typography>
+      <Typography variant='h4' gutterBottom>Top 5 Richest</Typography>
       <TableContainer sx={{ width: '100%' }}>
         <Table sx={{}}>
           <TableHead>
