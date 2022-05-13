@@ -38,7 +38,8 @@ const startEmitter = async (stock) => {
 const update = async (stock) => {
     let ar
     let newPrice
-    let prom = await database.getDocument('stock', stock.$id).then(res => {
+
+    await database.getDocument('stock', stock.$id).then(res => {
         let percentChange = Math.floor(Math.random() * 4) + 1
         percentChange *= Math.round(Math.random()) ? 1 : -1
         newPrice = res.currentPrice + (res.currentPrice * (percentChange / 100))
@@ -52,15 +53,18 @@ const update = async (stock) => {
             ar = ar.slice(1)
         }
         ar.push(Number(newPrice.toFixed(2)))
+
+        database.updateDocument('stock', stock.$id, {
+            currentPrice: newPrice,
+            priceHistory: ar
+        }).then((res) => {
+            console.log('updated')
+        })
     })
     // Generate Percent Change +/-
 
-    let promise = await database.updateDocument('stock', stock.$id, {
-        currentPrice: newPrice,
-        priceHistory: ar
-    }).then((res) => {
-        console.log('updated')
-    })
+
+
     // await delay(2000)
 }
 

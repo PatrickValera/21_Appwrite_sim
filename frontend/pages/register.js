@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import api from '../api'
 import { useRouter } from 'next/router'
 
-const UserRegister = () => {
+const RegisterPage = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -62,4 +62,4 @@ const UserRegister = () => {
   )
 }
 
-export default UserRegister
+export default RegisterPage

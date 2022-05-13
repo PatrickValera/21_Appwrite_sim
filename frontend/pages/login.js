@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import api from '../api'
 import { useRouter } from 'next/router'
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -54,4 +54,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LoginPage
