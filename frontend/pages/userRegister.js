@@ -21,7 +21,9 @@ const userRegister = () => {
 
           api.database.createDocument('userInfo', 'unique()', {
             cash: 20000,
-            userId: response.userId
+            userId: response.userId,
+            name:name,
+            netWorth: 20000
           }).then(res => console.log("CREATED USER INFO"))
 
         })
