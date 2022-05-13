@@ -2,7 +2,7 @@ import { Container, Skeleton, Table, TableBody, TableCell, TableContainer, Table
 import React, { useEffect, useState } from 'react'
 import api from '../api'
 import Header from '../components/Header'
-const leaderboard = () => {
+const LeaderBoard = () => {
   const [userList, setUserList] = useState()
   const fetchUsers = async () => {
     await api.database.listDocuments('userInfo').then(res => {
@@ -58,4 +58,4 @@ const leaderboard = () => {
   )
 }
 
-export default leaderboard
+export default LeaderBoard
