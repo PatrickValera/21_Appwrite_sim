@@ -110,7 +110,7 @@ const PortfolioPanel = ({ assets, stocks, user, userInfo, userCash }) => {
         </> :
         <FlexBox sx={{ flexDirection: 'column', alignContent: 'center', minHeight: '400px', justifyContent: 'center', borderBottom: '1px solid grey' }}>
           <Typography variant='h6'>Login to start trading.</Typography>
-          <Link href='/userlogin'>
+          <Link href='/login'>
             <Button variant='contained'>Login</Button>
           </Link>
         </FlexBox>

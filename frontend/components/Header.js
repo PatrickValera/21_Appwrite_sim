@@ -27,7 +27,7 @@ const Header = () => {
   const handleLogout = () => {
     api.account.deleteSession('current');
     setUser()
-    router.push('/userlogin')
+    router.push('/login')
   }
   useEffect(() => {
     fetchUser()
