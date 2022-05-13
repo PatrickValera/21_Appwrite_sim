@@ -42,7 +42,7 @@ const Header = () => {
       <FlexBox sx={{ justifyContent: 'center' }}>
         <Button href='/leaderboard'>LeaderBoard</Button>
         {!user ?
-          <Button href='/userlogin' variant='contained'>Login</Button> :
+          <Button href='/login' variant='contained'>Login</Button> :
           <>
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
               <Tooltip title="Account settings">
